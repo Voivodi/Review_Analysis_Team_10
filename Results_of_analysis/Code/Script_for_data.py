@@ -2,14 +2,13 @@ import re
 import pandas as pd
 from nltk.stem.snowball import SnowballStemmer
 
-# Если нет стоп-слов:
 # import nltk
 # nltk.download("stopwords")
 # from nltk.corpus import stopwords
 # STOP = set(stopwords.words("russian"))
 
-# ВАЖНО: используйте тот же STOP-лист, что и в проекте.
-STOP = set()  # <- подставьте ваш список стоп-слов
+
+STOP = set()  # <- список стоп-слов
 
 TOKEN_RE = re.compile(r"[а-яё]+", re.IGNORECASE)
 stemmer = SnowballStemmer("russian")
@@ -49,7 +48,6 @@ df["month"] = pd.to_datetime(df["review_date"]).dt.month.astype(int)
 df["season"] = df["month"].map(month_to_season)
 df["rating_group"] = df["rating"].map(rating_group)
 
-# если в сырье нет этих полей — ставим константы как в ваших CSV
 df["city"] = "Казань"
 df["org_type"] = "Кафе и рестораны"
 
@@ -68,7 +66,7 @@ for review_id, org_id, text, rating, rg, rdate, month, season in zip(
     for pos, tok in enumerate(all_tokens):
         tok = tok.replace("ё", "е")
         is_sw = (tok in STOP) or (len(tok) < 2)
-        is_sw_new = is_sw  # если есть 2-й список стоп-слов — примените его тут
+        is_sw_new = is_sw  # 2-й список стоп-слов — примените его тут
 
         if not is_sw_new:
             clean_tokens.append(tok)
